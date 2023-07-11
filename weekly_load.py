@@ -1,3 +1,4 @@
+import subprocess
 import logging
 import sql
 import pandas as pd
@@ -10,6 +11,15 @@ nuevas_filas = MyClass()
 
 # Apertura de la conexión a la BD
 conn = nuevas_filas.crear_conexion()
+
+# Backup de la base de datos
+try:
+    backup_query = f"\"BACKUP DATABASE {nuevas_filas.db_name} TO DISK = 'C:\\backup\{nuevas_filas.db_name}.bak'\""
+    subprocess.run(f"sqlcmd -S {nuevas_filas.db_server} -Q " + backup_query)
+    logging.info(f"Backup de la base de datos {nuevas_filas.db_name} creado exitosamente!")
+except sa.exc.ProgrammingError as e:
+    logging.error(str(e))
+
 
 # Cleanup de tablas por si quedaron datos de corridas anteriores
 for tabla in [nuevas_filas.incoming_data_table, nuevas_filas.staging_table]:
