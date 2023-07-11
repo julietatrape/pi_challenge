@@ -8,5 +8,6 @@ db_properties:
   driver: 'ODBC+Driver+17+for+SQL+Server'
   server: DESKTOP-T053MJ4\MSSQLSERVER,1433
   name: PI_JT
+  owner: DESKTOP-T053MJ4\julit
 
 scheduler: scheduler.xml
