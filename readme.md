@@ -7,7 +7,7 @@ También debe instalarse el driver ODBC Driver 17 for SQLServer, el cual puede d
 <https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver16>
 
 # 2. Archivos útiles 
-## 2.1. settings.yaml
+## 2.1. Settings
 Desde este archivo se podrán gestionar distintos parámetros tales como el servidor, la base de datos, la url del source y los nombres de las distintas tablas. Luego, los scripts del ETL llamarán a los parámetros de *settings.yaml* sin necesidad de hardcodear dichas variables. Esto permite modificar rápidamente los valores de los parámetros en caso de ser necesario.
 
 ## 2.2. Archivos de logs
@@ -46,3 +46,6 @@ Se hace un merge de la tabla de staging contra la tabla base utilizando como cla
 
 ### 3.2.5. Cleanup
 Se borran todos los registros de la tabla con registros del source y de la tabla de staging para evitar errores.
+
+
+# 4. Tests
