@@ -1,3 +1,6 @@
+scheduler: scheduler.xml
+py_version: python3 #Choose between python and python3
+
 nuevas_filas:
   base_table: UNIFICADO
   staging_table: UNIFICADO_STG
@@ -9,5 +12,3 @@ db_properties:
   server: DESKTOP-T053MJ4\MSSQLSERVER,1433
   name: PI_JT
   owner: DESKTOP-T053MJ4\julit
-
-scheduler: scheduler.xml

@@ -22,6 +22,7 @@ class MyClass():
             variables_dict = yaml.load(file, Loader=yaml.FullLoader)
 
         self.scheduler = variables_dict["scheduler"]
+        self.py_version = variables_dict["py_version"]
 
         self.db_server = variables_dict["db_properties"]["server"]
         self.db_name = variables_dict["db_properties"]["name"]
@@ -35,7 +36,7 @@ class MyClass():
 
     def actualizar_scheduler(self):
         # Definición del directorio local y de la localización del ejecutable de python
-        python_ex_location = subprocess.run("which python", capture_output=True, text=True).stdout.rstrip()
+        python_ex_location = subprocess.run("which "+self.py_version, capture_output=True, text=True).stdout.rstrip()
         current_location = subprocess.run("pwd", capture_output=True, text=True).stdout.rstrip()
 
         # Convesión de paths de Linux a path de Windows
