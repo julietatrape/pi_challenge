@@ -44,8 +44,8 @@ Se hace un merge de la tabla de staging contra la tabla base utilizando como cla
 * **Insert:** se insertan registros completamente nuevos, es decir, cuyos ID, MUESTRA y RESULTADO no existen previamente.
 * **Update:** se actualizan registros existentes, es decir, cuyos ID, MUESTRA y RESULTADO existen previamente. En este caso se actualizan todos los demás campos con los datos entrantes con el fin de conservar los valores más recientes.
 
-### 3.2.5. Cleanup
+### 3.2.5. Tests
+Se realiza un test de completitud para asegurar que se hayan afectado la misma cantidad de registros que hay en el source. En caso de que no haya coincidencia, los logs arrojan un warrning.
+
+### 3.2.6. Cleanup
 Se borran todos los registros de la tabla con registros del source y de la tabla de staging para evitar errores.
-
-
-# 4. Tests
