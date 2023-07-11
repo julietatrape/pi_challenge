@@ -1,6 +1,6 @@
 nuevas_filas:
-  base_table: NUEVAS_FILAS
-  staging_table: NUEVAS_FILAS_STG
+  base_table: UNIFICADO
+  staging_table: UNIFICADO_STG
   incoming_data_table: NUEVOS_DATOS_SQL
   file_url: https://adlssynapsetestfrancis.blob.core.windows.net/challenge/nuevas_filas.csv?sp=r&st=2023-04-20T15:25:12Z&se=2023-12-31T23:25:12Z&spr=https&sv=2021-12-02&sr=b&sig=MZIobvBY6c7ht%2FdFLhtyJ3MZgqa%2B75%2BY3YWntqL%2FStI%3D
 
