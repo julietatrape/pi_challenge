@@ -23,8 +23,6 @@ nuevos_datos.to_sql(nuevas_filas.incoming_data_table, conn, if_exists='append')
 logging.info(f"Datos importados exitosamente hacia la tabla {nuevas_filas.incoming_data_table}")
 
 # Inserción de los nuevos datos provienientes de la URL en la tabla staging
-# Hay que hacer commit ya que sqlalchemy solo hace autocommit cuando la query empieza con insert, delete, etc
-# Pero como usamos CTE no empieza con esas keywords
 transaction = conn.begin()
 try:
     logging.info(f"Insertando nuevos registros en la tabla {nuevas_filas.staging_table}...")
@@ -45,6 +43,14 @@ try:
     logging.info(f"Registros insertados/actualizados: {rows_merged} -> Tabla {nuevas_filas.base_table}")
 except sa.exc.ProgrammingError as e:
     logging.error(str(e))
+
+
+# Test de completitud
+if (rows_inserted == rows_merged):
+    logging.info(f"Se importaron todas las filas exitosamente!")
+else:
+    logging.warning(f"No se importaron todas las filas.")
+
 
 # Cleanup de tablas para asegurar que queden limpias para futuras cargas
 for tabla in [nuevas_filas.incoming_data_table, nuevas_filas.staging_table]:

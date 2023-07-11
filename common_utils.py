@@ -12,8 +12,8 @@ class MyClass():
         logging.basicConfig(level=logging.DEBUG,
             format='%(asctime)s [%(levelname)s] %(message)s',
             handlers=[
-                logging.FileHandler('logs_last.log', 'w+'),
-                logging.FileHandler('logs_history.log', 'a'),
+                logging.FileHandler('run_last.log', 'w+'),
+                logging.FileHandler('run_history.log', 'a'),
                 logging.StreamHandler()
             ])
 
