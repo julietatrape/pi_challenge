@@ -29,23 +29,26 @@ Se decidió crear una tabla de staging y no hacer el merge directamente con la t
 ## 3.2. Corrida semanal
 Una vez inicializado el ambiente se puede proceder con la carga semanal de las nuevas filas. Este proceso corre todos los días lunes a las 5 AM.
 
-### 3.2.1. Cleanup
+### 3.2.1. Backup de la base de datos
+Se realiza un backup de la base de datos por si se requiere en un futuro.
+
+### 3.2.2. Cleanup
 Se borran todos los registros de la tabla con registros del source y de la tabla de staging para evitar errores.
 
-### 3.2.2. Lectura de los datos provinientes del source
+### 3.2.3. Lectura de los datos provinientes del source
 Se leen los datos de la url y se vuelcan en una tabla intermedia que cuenta con datos crudos (sin transformaciones ni enriquecimiento).
 
-### 3.2.3. Inserción de datos en la tabla staging
+### 3.2.4. Inserción de datos en la tabla staging
 Se insertan los datos de la tabla intermedia en la tabla de staging. En este proceso se hace un enriquecimiento de los datos, colocando la fecha actual, y se eliminan registros duplicados que podrían venir desde la fuente.
 Los registros se consideran duplicados cuando tienen igual ID, MUESTRA y RESULTADO. En caso de que eso suceda en esta etapa, se conserva el registro con mayor valor de MUESTRA. 
 
-### 3.2.4. Merge contra la tabla base
+### 3.2.5. Merge contra la tabla base
 Se hace un merge de la tabla de staging contra la tabla base utilizando como clave de merge a los campos ID, MUESTRA y RESULTADO. Utilizando este tipo de operación se realizan dos acciones a la vez:
 * **Insert:** se insertan registros completamente nuevos, es decir, cuyos ID, MUESTRA y RESULTADO no existen previamente.
 * **Update:** se actualizan registros existentes, es decir, cuyos ID, MUESTRA y RESULTADO existen previamente. En este caso se actualizan todos los demás campos con los datos entrantes con el fin de conservar los valores más recientes.
 
-### 3.2.5. Tests
+### 3.2.6. Tests
 Se realiza un test de completitud para asegurar que se hayan afectado la misma cantidad de registros que hay en el source. En caso de que no haya coincidencia, los logs arrojan un warrning.
 
-### 3.2.6. Cleanup
+### 3.2.7. Cleanup
 Se borran todos los registros de la tabla con registros del source y de la tabla de staging para evitar errores.
