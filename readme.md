@@ -8,7 +8,7 @@ También debe instalarse el driver ODBC Driver 17 for SQLServer, el cual puede d
 
 # 2. Archivos útiles 
 ## 2.1. settings.yaml
-Desde este archivo se podrán gestionar distintos parámetros tales como el servidor, la base de datos y los nombres de las distintas tablas. Luego, los scripts del ETL llamarán a los parámetros de *settings.yaml* sin necesidad de hardcodear dichas variables.
+Desde este archivo se podrán gestionar distintos parámetros tales como el servidor, la base de datos, la url del source y los nombres de las distintas tablas. Luego, los scripts del ETL llamarán a los parámetros de *settings.yaml* sin necesidad de hardcodear dichas variables. Esto permite modificar rápidamente los valores de los parámetros en caso de ser necesario.
 
 ## 2.2. Archivos de logs
 Al correr los scripts se crearán dos archivos que almacenan los logs:
@@ -25,3 +25,24 @@ El método **actualizar_scheduler()** actualiza el archivo *scheduler.xml* con l
 ### 3.1.2. Creación de tablas
 Se crea una tabla de staging donde se efectuarán transformaciones antes de hacer el merge y una tabla base que será la tabla final que contenga los datos unificados de las distintas corridas semanales.
 Se decidió crear una tabla de staging y no hacer el merge directamente con la tabla proviniente del source para evitar posibles errores de merge por registros duplicados desde el origen. En este approach, en la tabla de staging se aplica una transformación para dejarla libre de duplicados. Esto nos asegura que a la hora de hacer el merge no haya claves de merge duplicadas ya que si eso sucediera, la ETL fallaría y se detendrían las actualizaciones hasta que se borren los registros duplicados.
+
+## 3.2. Corrida semanal
+Una vez inicializado el ambiente se puede proceder con la carga semanal de las nuevas filas.
+
+### 3.2.1. Cleanup
+Se borran todos los registros de la tabla con registros del source y de la tabla de staging para evitar errores.
+
+### 3.2.2. Lectura de los datos provinientes del source
+Se leen los datos de la url y se vuelcan en una tabla intermedia que cuenta con datos crudos (sin transformaciones ni enriquecimiento).
+
+### 3.2.3. Inserción de datos en la tabla staging
+Se insertan los datos de la tabla intermedia en la tabla de staging. En este proceso se hace un enriquecimiento de los datos, colocando la fecha actual, y se eliminan registros duplicados que podrían venir desde la fuente.
+Los registros se consideran duplicados cuando tienen igual ID, MUESTRA y RESULTADO. En caso de que eso suceda en esta etapa, se conserva el registro con mayor valor de MUESTRA. 
+
+### 3.2.4. Merge contra la tabla base
+Se hace un merge de la tabla de staging contra la tabla base utilizando como clave de merge a los campos ID, MUESTRA y RESULTADO. Utilizando este tipo de operación realizamos dos acciones a la vez:
+* **Insert:** insertamos registros completamente nuevos, es decir, cuyos ID, MUESTRA y RESULTADO no existan previamente.
+* **Update:** actualizamos registros existentes, es decir, cuyos ID, MUESTRA y RESULTADO existan previamente. En este caso se actualizan todos los demás campos con los datos entrantes para conservar los valores más recientes.
+
+### 3.2.5. Cleanup
+Se borran todos los registros de la tabla con registros del source y de la tabla de staging para evitar errores.
