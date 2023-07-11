@@ -1,5 +1,5 @@
 scheduler: scheduler.xml
-py_version: python3 #Choose between python and python3
+py_version: python #Choose between python and python3
 
 nuevas_filas:
   base_table: UNIFICADO
