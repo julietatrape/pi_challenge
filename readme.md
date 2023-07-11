@@ -27,7 +27,7 @@ Se crea una tabla de staging donde se efectuarán transformaciones antes de hace
 Se decidió crear una tabla de staging y no hacer el merge directamente con la tabla proviniente del source para evitar posibles errores de merge por registros duplicados desde el origen. En este approach, en la tabla de staging se aplica una transformación para dejarla libre de duplicados. Esto nos asegura que a la hora de hacer el merge no haya claves de merge duplicadas ya que si eso sucediera, la ETL fallaría y se detendrían las actualizaciones hasta que se borren los registros duplicados.
 
 ## 3.2. Corrida semanal
-Una vez inicializado el ambiente se puede proceder con la carga semanal de las nuevas filas.
+Una vez inicializado el ambiente se puede proceder con la carga semanal de las nuevas filas. Este proceso corre todos los días lunes a las 5 AM.
 
 ### 3.2.1. Cleanup
 Se borran todos los registros de la tabla con registros del source y de la tabla de staging para evitar errores.
@@ -40,9 +40,9 @@ Se insertan los datos de la tabla intermedia en la tabla de staging. En este pro
 Los registros se consideran duplicados cuando tienen igual ID, MUESTRA y RESULTADO. En caso de que eso suceda en esta etapa, se conserva el registro con mayor valor de MUESTRA. 
 
 ### 3.2.4. Merge contra la tabla base
-Se hace un merge de la tabla de staging contra la tabla base utilizando como clave de merge a los campos ID, MUESTRA y RESULTADO. Utilizando este tipo de operación realizamos dos acciones a la vez:
-* **Insert:** insertamos registros completamente nuevos, es decir, cuyos ID, MUESTRA y RESULTADO no existan previamente.
-* **Update:** actualizamos registros existentes, es decir, cuyos ID, MUESTRA y RESULTADO existan previamente. En este caso se actualizan todos los demás campos con los datos entrantes para conservar los valores más recientes.
+Se hace un merge de la tabla de staging contra la tabla base utilizando como clave de merge a los campos ID, MUESTRA y RESULTADO. Utilizando este tipo de operación se realizan dos acciones a la vez:
+* **Insert:** se insertan registros completamente nuevos, es decir, cuyos ID, MUESTRA y RESULTADO no existen previamente.
+* **Update:** se actualizan registros existentes, es decir, cuyos ID, MUESTRA y RESULTADO existen previamente. En este caso se actualizan todos los demás campos con los datos entrantes con el fin de conservar los valores más recientes.
 
 ### 3.2.5. Cleanup
 Se borran todos los registros de la tabla con registros del source y de la tabla de staging para evitar errores.
