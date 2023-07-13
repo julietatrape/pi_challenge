@@ -22,8 +22,10 @@ except sa.exc.ProgrammingError as e:
 
 
 # Cleanup de tablas por si quedaron datos de corridas anteriores
+transaction = conn.begin()
 for tabla in [nuevas_filas.incoming_data_table, nuevas_filas.staging_table]:
     nuevas_filas.truncar_tabla(tabla)
+transaction.commit()
 
 # Lectura de la tabla proveniente de la URL
 logging.info(f"Leyendo datos desde la fuente...")
@@ -63,8 +65,10 @@ else:
 
 
 # Cleanup de tablas para asegurar que queden limpias para futuras cargas
+transaction = conn.begin()
 for tabla in [nuevas_filas.incoming_data_table, nuevas_filas.staging_table]:
     nuevas_filas.truncar_tabla(tabla)
+transaction.commit()
 
 # Cierre de la conexión a la BD
 conn.close()
